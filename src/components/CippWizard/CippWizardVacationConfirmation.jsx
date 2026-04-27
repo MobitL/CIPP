@@ -28,23 +28,31 @@ export const CippWizardVacationConfirmation = (props) => {
     forwardingVacation.isSuccess ||
     oooVacation.isSuccess;
 
+    const toLocalDateStr = (epoch) => {
+  if (!epoch) return null;
+  const d = new Date(epoch * 1000);
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+};
   const handleSubmit = () => {
+
     if (values.enableCAExclusion) {
       caExclusion.mutate({
-        url: "/api/ExecTravelCAPolicy",
-        data: {
-          tenantFilter,
-          Users: values.Users,
-          BlockPolicies: values.BlockPolicies,
-          NamedLocations: values.NamedLocations || [],
-          CountryCodes: (values.CountryCodes || []).map((c) => c.value || c),
-          IncludeTrusted: values.IncludeTrusted || false,
-          StartDate: values.startDate,
-          EndDate: values.endDate,
-          vacation: true,
-          reference: values.reference || null,
-          postExecution: values.postExecution || [],
-        },
+  url: "/api/ExecTravelCAPolicy",
+  data: {
+    tenantFilter,
+    Users: values.Users,
+    BlockPolicies: values.BlockPolicies,
+    NamedLocations: values.NamedLocations || [],
+    CountryCodes: (values.CountryCodes || []).map((c) => c.value || c),
+    IncludeTrusted: values.IncludeTrusted || false,
+    StartDate: values.startDate,
+    EndDate: values.endDate,
+    StartDateStr: toLocalDateStr(values.startDate),
+    EndDateStr: toLocalDateStr(values.endDate),
+    vacation: true,
+    reference: values.reference || null,
+    postExecution: values.postExecution || [],
+  },
       });
     }
 
